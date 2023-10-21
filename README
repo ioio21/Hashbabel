@@ -1,8 +1,5 @@
 
-
-Tema2_SD
-
-In tema voi lucra cu un hashtable h_bib care in fiecre lista, nodurile imi retin in campul data o structura de tip Entry care are la cheie numele carti si ca valoare o structura info_carte. Structura info_carte imi va retine informatii despre cartea respectiva( rating, sume_note, imprumutat ca sa vad daca e imprumutata la momentul prezent si nr_imprumuturi) si un hashtable* carte care imi va retine pt fiecare noduri din bucketuri la campul de data, cheia si valoarea adica definitia si cuvantul dintr-o carte.
+Voi lucra cu un hashtable h_bib care in fiecre lista, nodurile imi retin in campul data o structura de tip Entry care are la cheie numele carti si ca valoare o structura info_carte. Structura info_carte imi va retine informatii despre cartea respectiva( rating, sume_note, imprumutat ca sa vad daca e imprumutata la momentul prezent si nr_imprumuturi) si un hashtable* carte care imi va retine pt fiecare noduri din bucketuri la campul de data, cheia si valoarea adica definitia si cuvantul dintr-o carte.
 
 
 Mai am un hashtable pt useri h_users in care pt fiecare nod din fiecare lista voi retine la data ca si cheie numele utilizatorului si ca si valoare o structura de tipul user carte contine nume_carte[41], nume-user[21], o variabila banat ca sa vad daca userul este sau nu banat din biblioteca, o variabila imprumutat pentru a vedea daca userul are deja imprumutata sau nu o carte, punctaj (la inceput 100 care scade si creste in functie de ce se intampla cu cartea imprumutata) si o variabila termen_limita care imi spune in cate zile trebuie returnata cartea pe care a imprumutat-o.
