@@ -1,0 +1,80 @@
+
+
+Tema2_SD
+
+In tema voi lucra cu un hashtable h_bib care in fiecre lista, nodurile imi retin in campul data o structura de tip Entry care are la cheie numele carti si ca valoare o structura info_carte. Structura info_carte imi va retine informatii despre cartea respectiva( rating, sume_note, imprumutat ca sa vad daca e imprumutata la momentul prezent si nr_imprumuturi) si un hashtable* carte care imi va retine pt fiecare noduri din bucketuri la campul de data, cheia si valoarea adica definitia si cuvantul dintr-o carte.
+
+
+Mai am un hashtable pt useri h_users in care pt fiecare nod din fiecare lista voi retine la data ca si cheie numele utilizatorului si ca si valoare o structura de tipul user carte contine nume_carte[41], nume-user[21], o variabila banat ca sa vad daca userul este sau nu banat din biblioteca, o variabila imprumutat pentru a vedea daca userul are deja imprumutata sau nu o carte, punctaj (la inceput 100 care scade si creste in functie de ce se intampla cu cartea imprumutata) si o variabila termen_limita care imi spune in cate zile trebuie returnata cartea pe care a imprumutat-o.
+
+
+Creez hashtable-ul pt intreaga biblioteca si pt useri folosind functia create_hashtable.
+Intr-un while care continua pana variabila ok se face 1 voi citi si aplica comenzile, urmand ca variabila ok sa se faca 1 in comanda EXIT. 
+
+ADD_BOOK = Citesc intreaga linie si cu strtock separ numele cartii si cate definitii trebuie sa contina. Aloc o o variabila info_carte*c si creez cu create_hashtable hashtableul care va fi pentru cartea pe care vreau sa o adaug si care imi va retine definitiile si cuvintele la cheie si valoare. Initializez apoi toate campurile din structura info_carte. Se citesc perechile cheie si definitii si se adauga la hashtable ul cartii (c->carte) cu ajutorul functiei add_hashtable. add_hashtable imi calculeaza indexul respectivei chei si imi verifica daca am mai intalnit definitia respectiva in carte pana acum si daca da, dau free valorii (free(e->val)) si la valoare pun valoarea noua citita la tastatura, si daca nu, creez un Entry* e care sa contina valoarea si cheia citite pe care il adaug in lista corespunzatoare indexului calculat ( (*h)->buckets[index]).
+
+Verific si daca cartea exista deja in biblioteca folosind functia find_hashtable care imi returneaza valoarea corespunzatoare cheii cautate in hashtable. Daca exista deja in biblioteca o carte cu acelasi nume, sterge cartea folosind functiile free_hashtable si delete_hashtable.
+
+free_hashtable = se parcurg toate listele de la h->buckets[0] pana la h->buckets[h->size - 1] si din fiecare lista dau free pt fiecare nod si pt fiecare Entry *e din sectiunea data la e->key si e->val. Apoi eliberez lista respectiva cu free_list si dupa ce ies din cele 2 foruri, free(h->buckets) si free(h).
+
+delete_hashtable =  calculez indexul cheii respective si verific daca cheia cautata e retinuta in primul nod din lista h->buckets[index]. In acest caz eliberez e->key si e->val si scot headul listei mutandu-l pe urmatorul nod. In caz contrar, dupa ce gasesc entryul care sa corespunda cheii si valorii date ca parametrii, eliberez e->key si e->val , dar si nodul care le contine (free_node(removed)). In ambele cazuri trebuie sa decrementez h->entries.
+
+La final adaug in hashtable-ul bibliotecii h_bib cartea  si dau free(c) deoarece eu am mai alocat o data pe c in functia de add_hashtable.
+
+GET_DEF = imi verifica mai intai cu functia find_hashtable daca cartea este in biblioteca si apoi tot cu functia find_hashtable daca definitia e in hashtable-ul cartii si imi returneaza valoarea corespunzatoare cheii.
+
+GET_BOOK = imi verifica mai intai cu functia find_hashtable daca cartea este in biblioteca si apoi daca este, imi afiseaza nume rating si purchases. (caz separat pt cand numarul de imprumuturi = 0 ca sa mearga impartirea)
+
+RMV_BOOK = imi verifica mai intai cu functia find_hashtable daca cartea este in biblioteca si daca este cu functia free_hashtable si delete_hashtable scot cartea.
+
+ADD_DEF = imi verifica mai intai cu functia find_hashtable daca cartea este in biblioteca si daca e cu functia de add_hashtable adaug definitia si cheia la ea.
+
+RMV_DEF = imi verifica mai intai cu functia find_hashtable daca cartea este in biblioteca si daca e mai aplic inca o data functia de find_hashtable pentru a gasi definitia in hashtable-ul de carte si daca o gasesc cu functia delete_hashtable sterg din hashtable-ul cartii pe key.
+
+ADD_USER = verific cu find_hashtable daca userul e deja in hashtable-ul de useri, si daca nu, aloc o variabila de tipul user* u so ii initializez campurile, apoi o adaug cu funcia de add_hashtable la hashtable-ul de useri. Trebuie dat free(u) pentru ca u ar fi de 2 ori alocat (si din add_hashtable).
+
+BORROW = Verific mai intai daca userul este banat din sistem, apoi daca are deja o carte imprumutata, daca se afla cartea in biblioteca , daca cartea e deja imprumutata. Si daca conditiile sunt bune, il fac pe c->imprumutat = 1 pt ca am dat cartea deja userului, u->imprumutat = 1 pt ca acum are deja o carte imprumutata userul, copiez numele cartii in u->nume_carte ca sa stiu ce carte a imprumutat userul, si pe user_name in u->nume_user, u->termen_limita = in cate zile trebuie predata.
+
+RETURN = Gasesc userul in sistem cu find_hashtable, u = structura de user corespunzatoare cheii gasite. Verific daca userul e banat, daca userul a imprumutat tot cartea pe care acum vrea sa o returneze. Daca cartea e predata mai rapid decat termenul limita punctajul creste, daca nu, scade. La final verific daca in urma unei eventuale scaderi de punctaj , acesta a devenit negativ si atunci userul trebuie banat. Daca se respecta toate conditiile, se gaseste cartea in h_bib cu find_hashtable si ii resetez c->imprumutat = 0 pentru a arata ca poate fi imprumutata din nou acum, adaug la c->sume_note nota data de user la return, u->imprumutat = 0 pentru ca acum nu mai are o carte imprumutata si c->nr_imprumuturi se incrementeaza.
+
+
+LOST = Gasesc userul in h_users, verific daca e banat, gasesc cartea in h_bib si o scot cu free_hashtable si delete_hashtable. Scad punctajul userului cu 50 si resetez u->imprumutat la 0, u->termen_limita la 0. La final verfic daca punctajul userului a ajuns negativ pentru a vedea daca trebuie banat.
+
+
+EXIT = ma folosesc de 2 strcturi top_useri care imi tine numele userului si punctajul si o structura top_carte care imi tine numele cartii, numarul de imprumuturi si ratingul.
+
+Aloc un vector top_carte* c de dimensiune h_bib->size si parcurg pentru fiecare lista nodurile, calculez ratingul pentru fiecare carte si pun in c[l].rating ratingul calculat anterior, in c[l].nr_imprumuturi = book=>nr_imprumuturi si in c[l].nume_carte pe e->key. Incrementez l.
+Intr-un for de la 0 la l-1 compar si interschimb pentru a sorta descrescator in functie de rating, de nr_imprumuturi si lexicografic, vectorul c. La final il afisez si ii dau free.
+
+
+Aloc un vector top_useri* v de dimensiune h_users->entries si parcurg pentru fiecare lista nodurile, verific daca userul e banat si daca nu copiez in v[d].nume_user numele userului si in v[d].punctaj pe punctajul userului.
+Intr-un for de la 0 la d-1 compar si interschimb pentru a sorta descrescator in functie de punctaj si lexicografic, vectorul v. La final il afisez si ii dau free.
+
+cu un for de la 0 la h_bib->size , pentru fiecare lista (h_bib->buckets[i]) , dau free hashtable_ului din structua info_carte retinuta in e->val din nodul curent->data. La final de for apelez free_hashtable(h_bib) si nu o sa mai am pb deoarece hashtable-ul din interior e deja eliberat. La final dau si free_hashtable(h_users) pentru a-mi elibera hashtable-ul de useri.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
